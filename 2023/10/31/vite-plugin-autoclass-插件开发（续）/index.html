@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>vite-plugin-autoclass 插件开发（续） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="第三个版本第二个版本在使用git进行多人开发时，由于每个人开发会生成不同的auto.css，在每次代码合并时都会产生冲突，事实上这个冲突在每次构建项目时是个伪冲突，插件在构建时会将所有自动生成的类统一处理。所以第三个版本的方案很简单，就是将auto.css文件放入gitignore, 仍然放在transform方法中，在入口文件引入auto.css时插入到.gitignore文件开始处 代码 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vite-plugin-autoclass 插件开发（续）">
+<meta property="og:url" content="http://tarzandong.github.io/tarzanBlog.github.io/2023/10/31/vite-plugin-autoclass-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%EF%BC%88%E7%BB%AD%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第三个版本第二个版本在使用git进行多人开发时，由于每个人开发会生成不同的auto.css，在每次代码合并时都会产生冲突，事实上这个冲突在每次构建项目时是个伪冲突，插件在构建时会将所有自动生成的类统一处理。所以第三个版本的方案很简单，就是将auto.css文件放入gitignore, 仍然放在transform方法中，在入口文件引入auto.css时插入到.gitignore文件开始处 代码 1">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-31T00:48:58.000Z">
+<meta property="article:modified_time" content="2023-10-31T01:26:28.242Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/tarzanBlog.github.io/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/tarzanBlog.github.io/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/tarzanBlog.github.io/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/tarzanBlog.github.io/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/tarzanBlog.github.io/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/tarzanBlog.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="/tarzanBlog.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/tarzanBlog.github.io/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://tarzandong.github.io/tarzanBlog.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-vite-plugin-autoclass-插件开发（续）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/tarzanBlog.github.io/2023/10/31/vite-plugin-autoclass-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%EF%BC%88%E7%BB%AD%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2023-10-31T00:48:58.000Z" itemprop="datePublished">2023-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      vite-plugin-autoclass 插件开发（续）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ol start="3">
+<li>第三个版本<br>第二个版本在使用git进行多人开发时，由于每个人开发会生成不同的auto.css，在每次代码合并时都会产生冲突，事实上这个冲突在每次构建项目时是个伪冲突，插件在构建时会将所有自动生成的类统一处理。所以第三个版本的方案很简单，就是将auto.css文件放入gitignore, 仍然放在transform方法中，在入口文件引入auto.css时插入到.gitignore文件开始处<ul>
+<li>代码 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">    transform(code,id)&#123;</span><br><span class="line">      // console.log(id)</span><br><span class="line">      if (id.substring(id.length - mainjsFile.length) == mainjsFile) &#123;</span><br><span class="line">              </span><br><span class="line">        //由于auto.css为自动生成，每个项目成员开发者都有可能生成新的不同的css类，容易产生代码冲突，所以在gitignore中将其屏蔽</span><br><span class="line">        if (fs.existsSync(&#x27;./.gitignore&#x27;)) &#123;</span><br><span class="line">          let ignoreContent = fs.readFileSync(&#x27;./.gitignore&#x27;, &#x27;utf-8&#x27;)</span><br><span class="line">          if (!ignoreContent.includes(cssFile)) &#123;</span><br><span class="line">            ignoreContent = cssFile+&#x27;\n&#x27;+ignoreContent</span><br><span class="line">          &#125;</span><br><span class="line">          fs.writeFileSync(&#x27;./.gitignore&#x27;,ignoreContent) </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        ...</span><br><span class="line">      &#125;</span><br><span class="line">      ...</span><br><span class="line">    ```  </span><br><span class="line"></span><br><span class="line">4. 最终版本</span><br><span class="line">   第三个版本在开发环境已经能完美生效了，但在构建生产包时，由于没有开发服务热刷新重新引入最新生成的auto.css，会造成生产环境丢失最新的auto.css更新信息。</span><br><span class="line">   在auto.css更新完成后重新加载到生产环境，成了插件的最终需求。</span><br><span class="line">   解决方案： 试过各种方案后，在index.html引入auto.css，在打包后将auto.css手动拷贝到最终的包中成了最简洁优雅的方案。</span><br><span class="line"></span><br><span class="line">   * 代码</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<p>  &#x2F;&#x2F; configResolved(resolvedConfig)方法会在构建的最早阶段调用，我们在这个方法中全局保存配置环境<br>  configResolved(resolvedConfig) {<br>    config &#x3D; resolvedConfig<br>  },</p>
+<p>  &#x2F;&#x2F;transformIndexHtml(html)方法用于对html文件进行处理，它的周期会比transform方法更早， 我们在head部分添加对auto.css文件的引入<br>  transformIndexHtml(html) {<br>    if (config.env.PROD) {<br>      &#x2F;&#x2F;生产环境引入 auto.css的方法<br>      return html.replace(‘&lt;&#x2F;head’, <code>\t&lt;link rel=&quot;stylesheet&quot; href=&quot;/$&#123;config.build.assetsDir&#125;/$&#123;cssFile&#125;&quot;&gt;\n\t&lt;/head</code>)<br>    }<br>    else return html<br>  },</p>
+<p>  &#x2F;&#x2F;closeBundle()方法会在最终打包时调用，在这个周期中我们将auto.css文件拷贝至包中<br>  closeBundle() {<br>    if (config.env.PROD) {<br>      &#x2F;&#x2F;生产环境打包时将auto.css拷贝至输出文件夹的assets中<br>      fs.copyFileSync(autoCSSFile, <code>./$&#123;config.build.outDir&#125;/$&#123;config.build.assetsDir&#125;/$&#123;cssFile&#125;</code>)<br>    }<br>  }</p>
+<pre><code>
+至此，我们可以毫无负担的添加类似于class=&quot;w32&quot;代码了。现在该插件也支持react的classname=&#39;w32&#39;了。 具体使用，可参见npm中的文档(https://www.npmjs.com/package/vite-plugin-autoclass)。
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tarzandong.github.io/tarzanBlog.github.io/2023/10/31/vite-plugin-autoclass-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%EF%BC%88%E7%BB%AD%EF%BC%89/" data-id="clodnen230000mkuzcuxi9ea1" data-title="vite-plugin-autoclass 插件开发（续）" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/tarzanBlog.github.io/2023/10/30/vite-plugin-autoclass-vite%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vite-plugin-autoclass vite插件开发</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/tarzanBlog.github.io/archives/2023/10/">October 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/tarzanBlog.github.io/2023/10/31/vite-plugin-autoclass-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%EF%BC%88%E7%BB%AD%EF%BC%89/">vite-plugin-autoclass 插件开发（续）</a>
+          </li>
+        
+          <li>
+            <a href="/tarzanBlog.github.io/2023/10/30/vite-plugin-autoclass-vite%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/">vite-plugin-autoclass vite插件开发</a>
+          </li>
+        
+          <li>
+            <a href="/tarzanBlog.github.io/2023/10/28/I-am-Tarzan/">I am Tarzan</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/tarzanBlog.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="/tarzanBlog.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/tarzanBlog.github.io/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/tarzanBlog.github.io/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/tarzanBlog.github.io/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
