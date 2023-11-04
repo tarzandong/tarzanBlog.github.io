@@ -73,6 +73,48 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vue全局组件如何让volar插件生成props提示" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/tarzanBlog.github.io/2023/11/04/vue%E5%85%A8%E5%B1%80%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%AE%A9volar%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90props%E6%8F%90%E7%A4%BA/" class="article-date">
+  <time class="dt-published" datetime="2023-11-04T03:41:58.000Z" itemprop="datePublished">2023-11-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/tarzanBlog.github.io/2023/11/04/vue%E5%85%A8%E5%B1%80%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%AE%A9volar%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90props%E6%8F%90%E7%A4%BA/">vue全局组件如何让volar插件生成props提示</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h1><p>我们在引入第三方发布的vue组件，或自己开发npm发布的vue组件时，如果用户使用vue.use()或者vue.component()方法全局注册组件，即可全局使用该组件的<code>&lt;foo /&gt;</code>标签，但是该组件缺少props属性提示，这时我们需要让volar插件生成props提示。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>声明 <strong>GlobalComponents</strong> 接口，volar插件会自动检测该接口，生成相应提示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import foo from &quot;./foo&quot;</span><br><span class="line"></span><br><span class="line">declare module &#x27;vue&#x27; &#123;</span><br><span class="line">  export interface GlobalComponents &#123;</span><br><span class="line">    foo: typeof foo</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用第三方组件时，可以单独将该声明类型生成.d.ts文件置于工程目录中。自己编写npm发布的vue组件时，可将这段代码置于入口文件中。这样您就可以在<code>&lt;foo /&gt;</code>标签上看到props提示了。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://tarzandong.github.io/tarzanBlog.github.io/2023/11/04/vue%E5%85%A8%E5%B1%80%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%AE%A9volar%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90props%E6%8F%90%E7%A4%BA/" data-id="clojigjzk0000mouz44hjgmvr" data-title="vue全局组件如何让volar插件生成props提示" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-vite-plugin-autoclass-插件开发（续）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/tarzanBlog.github.io/2023/10/31/vite-plugin-autoclass-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%EF%BC%88%E7%BB%AD%EF%BC%89/" class="article-date">
@@ -255,7 +297,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/tarzanBlog.github.io/archives/2023/10/">October 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/tarzanBlog.github.io/archives/2023/11/">November 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/tarzanBlog.github.io/archives/2023/10/">October 2023</a></li></ul>
     </div>
   </div>
 
@@ -266,6 +308,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/tarzanBlog.github.io/2023/11/04/vue%E5%85%A8%E5%B1%80%E7%BB%84%E4%BB%B6%E5%A6%82%E4%BD%95%E8%AE%A9volar%E6%8F%92%E4%BB%B6%E7%94%9F%E6%88%90props%E6%8F%90%E7%A4%BA/">vue全局组件如何让volar插件生成props提示</a>
+          </li>
         
           <li>
             <a href="/tarzanBlog.github.io/2023/10/31/vite-plugin-autoclass-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%EF%BC%88%E7%BB%AD%EF%BC%89/">vite-plugin-autoclass 插件开发（续）</a>
